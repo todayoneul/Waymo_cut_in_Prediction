@@ -36,13 +36,17 @@ def maneuver_bounds(tracks, row):
 
 
 def draw_maneuver(ax, items, scene, tracks, row, bounds):
-    """기준 시점(0초)의 장면에 과거 1초(실선)와 미래 3초(점선), 진입 확인 위치(점선 상자)를 겹쳐 그린다."""
+    """기준 시점(0초)의 Reference와 Target만 그리고 과거 1초(실선), 미래 3초(점선), 진입 확인 위치(점선 상자)를 겹친다.
+
+    주변 차량은 두 차량의 움직임을 가려서 이 그림에서는 그리지 않는다.
+    """
     ref_id, tgt_id = int(row["reference_id"]), int(row["target_id"])
     ref, tgt = tracks[ref_id], tracks[tgt_id]
     t0, entry = int(row["anchor_frame"]), int(row["entry_frame"])
     transform, _ = frame_of(ref[t0])
     draw_road(ax, items, transform)
-    draw_agents(ax, scene, tracks, t0, transform, roles={ref_id: (REF, "Reference"), tgt_id: (TGT, "Target")}, show_people=False)
+    draw_agents(ax, scene, tracks, t0, transform, roles={ref_id: (REF, "Reference"), tgt_id: (TGT, "Target")},
+                show_people=False, show_others=False)
     last = min(t0 + HORIZON, len(ref) - 1)
     for states, color in ((ref, REF), (tgt, TGT)):
         past = transform(states[t0 - HISTORY:t0 + 1, :2])
@@ -71,7 +75,7 @@ def plot_cutin_example(output_dir, scene, items, tracks, row):
     fig = plt.figure(figsize=(width, width * np.ptp(bounds[1]) / np.ptp(bounds[0])))
     ax = fig.add_axes([0, 0, 1, 1])
     draw_maneuver(ax, items, scene, tracks, row, bounds)
-    legend_below(ax, road_legend()[:3] + maneuver_legend(), ncol=6)
+    legend_below(ax, road_legend()[:2] + maneuver_legend(), ncol=5)
     save(fig, output_dir, "01_cutin_example")
 
 

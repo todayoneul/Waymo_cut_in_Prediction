@@ -11,3 +11,6 @@ __pycache__/
 
 # macOS
 .DS_Store
+
+# 발표 자료 (PowerPoint 파일과 슬라이드용 이미지)
+presentation/

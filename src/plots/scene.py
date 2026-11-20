@@ -96,10 +96,11 @@ def draw_vehicle(ax, state, transform, color, label=None, z=6, label_side=1):
                     zorder=z + 2, path_effects=LABEL_SHADOW)
 
 
-def draw_agents(ax, scene, tracks, frame, transform, roles=None, show_people=True):
+def draw_agents(ax, scene, tracks, frame, transform, roles=None, show_people=True, show_others=True):
     """한 시점의 모든 차량(주변 차량은 회색)과 보행자·자전거를 그린다. roles = {차량 ID: (색, 이름표)}.
 
     역할 차량이 두 대이면 서로의 이름표가 겹치지 않도록 상대 차량 쪽의 반대편에 이름표를 붙인다.
+    show_others=False이면 roles에 있는 차량만 그린다.
     """
     roles = roles or {}
     sides = {}
@@ -109,7 +110,7 @@ def draw_agents(ax, scene, tracks, frame, transform, roles=None, show_people=Tru
         sides = {first: -1 if y_second > y_first else 1, second: 1 if y_second > y_first else -1}
     for track in scene.tracks:
         state = tracks[track.id][frame]
-        if state[7] <= 0:
+        if state[7] <= 0 or (not show_others and track.id not in roles):
             continue
         if track.object_type == 1:
             color, label = roles.get(track.id, (OTHER, None))

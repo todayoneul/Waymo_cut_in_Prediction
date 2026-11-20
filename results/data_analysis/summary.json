@@ -1,0 +1,86 @@
+{
+  "splits": {
+    "train": {
+      "samples": 117508,
+      "source_files": 40,
+      "label_sources": {
+        "rule": 117508
+      },
+      "positives": 1600
+    },
+    "validation": {
+      "samples": 29274,
+      "source_files": 12,
+      "label_sources": {
+        "rule": 29274
+      }
+    },
+    "test": {
+      "samples": 24404,
+      "source_files": 12,
+      "label_sources": {
+        "rule": 24404
+      }
+    }
+  },
+  "train_columns_with_missing_data": 23,
+  "pc1_and_pc2_explained_variance": 0.29581692730205456,
+  "train_cv_by_drive_segment": {
+    "Full": {
+      "columns": 99,
+      "average_precision": 0.8240504654267123,
+      "fold_ap": [
+        0.8340582382488666,
+        0.8310459546005299,
+        0.8386730198119848,
+        0.8231853048771622,
+        0.7932898095950183
+      ]
+    },
+    "Imputed control": {
+      "columns": 99,
+      "average_precision": 0.822926844430178,
+      "fold_ap": [
+        0.8356419897605766,
+        0.8314073730622399,
+        0.836012314671467,
+        0.8235683330454419,
+        0.7880042116111645
+      ]
+    },
+    "Correlation filter": {
+      "columns": 80,
+      "average_precision": 0.8270134357448276,
+      "fold_ap": [
+        0.8348546512110344,
+        0.8377619100820104,
+        0.8381764333577988,
+        0.828852630540838,
+        0.7954215535324564
+      ]
+    },
+    "PCA 90%": {
+      "columns": 30,
+      "average_precision": 0.7588050684307409,
+      "fold_ap": [
+        0.7640458539500259,
+        0.7539306869713,
+        0.7684075441747539,
+        0.7603971523336027,
+        0.7472441047240218
+      ]
+    },
+    "PCA 95%": {
+      "columns": 39,
+      "average_precision": 0.7699904377863239,
+      "fold_ap": [
+        0.768378585804518,
+        0.7671128963995372,
+        0.7840267246945756,
+        0.7629554779062194,
+        0.7674785041267695
+      ]
+    }
+  },
+  "data_usage": "train only; validation/test are counted, never plotted or scored"
+}

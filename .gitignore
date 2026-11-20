@@ -1,0 +1,13 @@
+# 데이터는 Waymo 이용 약관과 용량 때문에 Google Drive로만 공유한다
+data/
+
+# Colab 노트북은 Google Drive로 공유한다 (원본 .py는 notebooks/source/에 있음)
+notebooks/*.ipynb
+
+# 파이썬 캐시와 가상환경
+__pycache__/
+*.pyc
+.venv/
+
+# macOS
+.DS_Store

@@ -26,7 +26,7 @@
 %pip -q install "google-cloud-storage>=2.16,<4" "grpcio-tools==1.76.0" "protobuf>=6.31.1,<7" "google-crc32c>=1.5,<2" "pillow>=10.1" ipywidgets
 
 # %%
-# 검토자 이름표와 검토할 분할을 정하고, Drive의 데이터셋 폴더에서 검토 목록을 읽습니다.
+# 검토자 이름표, 검토할 분할, 맡은 배치 범위를 정하고 Drive의 데이터셋 폴더에서 검토 목록을 읽습니다.
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from io import BytesIO

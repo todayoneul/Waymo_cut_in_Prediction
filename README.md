@@ -137,7 +137,7 @@ uv run --python 3.12 scripts/train_baseline.py
 ## 사람 검토
 
 1. 팀원은 공유받은 Drive의 `waymo_dataset` 폴더를 **내 드라이브에 바로가기로 추가**하고 `dataset_review.ipynb`를 연다.
-2. `REVIEWER_ID`를 각자 다르게 정하고 모두 실행한다. 배치 하나는 원본 파일 하나에서 자동 양성·음성을 무작위로 최대 4건씩 뽑은 8건이다.
+2. `REVIEWER_ID`를 각자 다르게 정하고, `MY_BATCHES`에 맡은 배치 번호 범위(예: `10-19`)를 적은 뒤 모두 실행한다. 배치 하나는 원본 파일 하나에서 자동 양성·음성을 무작위로 최대 4건씩 뽑은 8건이다.
 3. 판정은 `waymo_dataset/reviews/votes/<검토자>/`에 바로 저장된다. 의견이 갈리거나 보류인 표본은 데이터셋에서 빠진다.
 4. 반영은 `dataset_build.ipynb`를 다시 모두 실행하거나, 판정 CSV를 내려받아 `scripts/apply_reviews.py`를 실행한다.
 

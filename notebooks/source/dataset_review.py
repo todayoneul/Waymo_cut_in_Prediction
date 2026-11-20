@@ -5,7 +5,7 @@
 #
 # **사용 순서**
 #
-# 1. 1번 준비 셀에서 \`REVIEWER_ID\`(내 이름표, 영문·숫자)를 정하고 **런타임 → 모두 실행**합니다. Drive 연결과 Waymo 로그인 창이 뜨면 허용합니다.
+# 1. 1번 준비 셀에서 \`REVIEWER_ID\`(내 이름표, 영문·숫자)와 \`MY_BATCHES\`(맡은 배치 번호 범위, 예: \`10-19\`)를 정하고 **런타임 → 모두 실행**합니다. Drive 연결과 Waymo 로그인 창이 뜨면 허용합니다.
 # 2. 4번 검토 화면에서 **파란색 기준 차량(REF)** 과 **주황색 상대 차량(TARGET)** 을 봅니다.
 #    - **끼어들기 있음:** 0초에 옆 차로에 있던 상대 차량이 3초 안에 기준 차량 **앞쪽** 같은 차로로 들어와 잠시 유지함
 #    - **끼어들기 없음:** 3초 동안 각자 자기 차로를 유지함 (기준 차량이 옮겨 간 경우, 상대 차량이 기준 차량 뒤로 들어온 경우도 없음)
@@ -42,10 +42,13 @@ from google.colab import drive, output
 
 REVIEWER_ID = ""              # @param {type:"string"}
 REVIEW_SPLIT = "train"        # @param ["train", "validation", "test"]
+MY_BATCHES = ""               # @param {type:"string"}
 DATASET_FOLDER = "/content/drive/MyDrive/waymo_dataset"   # @param {type:"string"}
 
 if not re.fullmatch(r"[A-Za-z0-9_-]{2,32}", REVIEWER_ID):
     raise ValueError("REVIEWER_ID에 내 이름표를 넣고 다시 실행하세요. 영문·숫자·-·_ 로 2~32자입니다. 예: gyuhan")
+if MY_BATCHES.strip() and not re.fullmatch(r"\s*\d+\s*-\s*\d+\s*", MY_BATCHES):
+    raise ValueError("MY_BATCHES는 맡은 배치 번호 범위입니다. 예: 10-19 (train-00010~train-00019). 전체를 보려면 비워 둡니다.")
 drive.mount("/content/drive")
 output.enable_custom_widget_manager()
 
@@ -55,6 +58,9 @@ if not QUEUE_PATH.is_file():
     raise FileNotFoundError(f"{QUEUE_PATH}가 없습니다. 데이터셋 만들기 노트북을 먼저 끝까지 실행했는지, 폴더 경로가 맞는지 확인하세요.")
 with QUEUE_PATH.open(encoding="utf-8-sig", newline="") as handle:
     QUEUE = [row for row in csv.DictReader(handle) if row["split"] == REVIEW_SPLIT]
+if MY_BATCHES.strip():  # 맡은 번호 범위의 배치만 남긴다
+    LOW, HIGH = (int(x) for x in MY_BATCHES.split("-"))
+    QUEUE = [row for row in QUEUE if LOW <= int(row["batch"].split("-")[-1]) <= HIGH]
 VOTE_DIR = ROOT / "reviews" / "votes" / REVIEWER_ID
 print(f"{REVIEW_SPLIT} 검토 목록 {len(QUEUE)}건 · 배치 {len({r['batch'] for r in QUEUE})}개 · 판정 저장 위치 {VOTE_DIR}")
 

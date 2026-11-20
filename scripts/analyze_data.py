@@ -2,9 +2,10 @@
 # requires-python = ">=3.12"
 # dependencies = ["numpy==2.5.5", "scikit-learn==1.9.1", "matplotlib==3.10.9"]
 # ///
-"""train만으로 데이터를 탐색한다: 라벨 구성, feature 분포·상관, PCA로 차원을 줄였을 때의 변화.
+"""train만으로 데이터를 탐색한다: 라벨 구성, feature 분포·상관, feature 선택, PCA로 차원을 줄였을 때의 변화.
 
 validation·test는 표본 수만 센다. 모든 비교는 train 안에서 주행 구간 단위 5-fold 교차검증으로 한다.
+같은 데이터셋으로 이미 계산한 교차검증 결과가 summary.json에 있으면 다시 계산하지 않고 그림만 새로 그린다.
 """
 import csv
 import json
@@ -25,7 +26,10 @@ sys.path.insert(0, str(ROOT))  # 프로젝트 폴더의 src 패키지를 불러�
 from src.dataset import describe_splits, load_dataset
 from src.models import boosting
 from src.paths import DATASET_DIR, FIGURES_DIR, RESULTS_DIR
-from src.plots.analysis import configure_plots, plot_feature_distributions, plot_label_overview, plot_pca
+from src.plots.analysis import (
+    plot_class_balance, plot_feature_correlations, plot_feature_distributions, plot_feature_selection, plot_pca,
+)
+from src.plots.style import configure_plots
 
 RESULTS_OUT = RESULTS_DIR / "data_analysis"   # 표·요약
 FIGURES_OUT = FIGURES_DIR / "data_analysis"   # 그림
@@ -93,25 +97,37 @@ def main():
     drives = np.array([row["segment_id"] for row in data.rows])[train]   # 교차검증 묶음 = 주행 구간
     counts = describe_splits(data)
     stats = describe_features(x, y, names)
+    created = data.info["created_utc"]
+    saved = json.loads((RESULTS_OUT / "summary.json").read_text(encoding="utf-8")) if (RESULTS_OUT / "summary.json").exists() else {}
 
-    per_fold = []
-    for fit, held in GroupKFold(n_splits=min(5, len(set(drives)))).split(x, y, groups=drives):
-        per_fold.append(fold_scores(x[fit], y[fit], x[held], y[held]))
-        print(f"fold {len(per_fold)}: " + " · ".join(f"{k} {v[1]:.3f}" for k, v in per_fold[-1].items()), flush=True)
-    results = {name: {"columns": int(np.mean([f[name][0] for f in per_fold])),
-                      "average_precision": float(np.mean([f[name][1] for f in per_fold])),
-                      "fold_ap": [f[name][1] for f in per_fold]} for name in per_fold[0]}
+    if saved.get("dataset_created_utc") == created:
+        results = saved["train_cv_by_drive_segment"]
+        print("같은 데이터셋의 교차검증 결과를 다시 사용합니다.", flush=True)
+    else:
+        per_fold = []
+        for fit, held in GroupKFold(n_splits=min(5, len(set(drives)))).split(x, y, groups=drives):
+            per_fold.append(fold_scores(x[fit], y[fit], x[held], y[held]))
+            print(f"fold {len(per_fold)}: " + " · ".join(f"{k} {v[1]:.3f}" for k, v in per_fold[-1].items()), flush=True)
+        results = {name: {"columns": int(np.mean([f[name][0] for f in per_fold])),
+                          "average_precision": float(np.mean([f[name][1] for f in per_fold])),
+                          "fold_ap": [f[name][1] for f in per_fold]} for name in per_fold[0]}
 
     prep = make_pipeline(SimpleImputer(strategy="median", keep_empty_features=True), StandardScaler())
     pca = PCA(svd_solver="full").fit(scaled := prep.fit_transform(x))
-    report = {"splits": counts, "train_columns_with_missing_data": sum(r["missing_pct"] > 0 for r in stats),
+    report = {"dataset_created_utc": created, "splits": counts,
+              "train_columns_with_missing_data": sum(r["missing_pct"] > 0 for r in stats),
               "pc1_and_pc2_explained_variance": float(pca.explained_variance_ratio_[:2].sum()),
               "train_cv_by_drive_segment": results,
               "data_usage": "train only; validation/test are counted, never plotted or scored"}
     (RESULTS_OUT / "summary.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     write_table(RESULTS_OUT / "feature_summary.csv", stats)
-    plot_label_overview(counts, FIGURES_OUT)
+
+    selection = json.loads((DATASET_DIR / "feature_selection.json").read_text(encoding="utf-8"))
+    train_rows = [row for row, keep in zip(data.rows, train) if keep]
+    plot_class_balance(y, train_rows, FIGURES_OUT)
     plot_feature_distributions(x, y, names, FIGURES_OUT)
+    ranked = plot_feature_selection(selection, data.motion_names, FIGURES_OUT)
+    plot_feature_correlations(x, names, ranked, FIGURES_OUT)
     plot_pca(pca.transform(scaled), pca.explained_variance_ratio_, y, results, FIGURES_OUT)
     print("저장:", RESULTS_OUT, FIGURES_OUT, flush=True)
 

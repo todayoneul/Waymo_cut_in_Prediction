@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT))  # 프로젝트 폴더의 src 패키지를 불러�
 
 from src.dataset import describe_splits, evaluate, load_dataset, validation_threshold
 from src.models import bootstrap_f1, boosting, fit_select
-from src.paths import DATASET_DIR, RESULTS_DIR
+from src.paths import DATASET_DIR, PREDICTIONS_DIR, RESULTS_DIR
 
 OUTPUT_DIR = RESULTS_DIR / "baseline"
 MODE = "train_cv"   # "train_cv" | "validation" | "final_test"
@@ -75,6 +75,7 @@ def run_train_cv(inputs, y, rows, train_mask):
         ("boosting_balanced", lambda: boosting(0.07, 15, 60, 200, "balanced")),
     )
     results = {}
+    oof_scores = {}  # 모델·입력 조합별 교차검증 예측값 (결과 그림용)
     for input_name, x_all in inputs.items():
         x_tr = x_all[tr_idx]
         for model_name, build in specs:
@@ -86,9 +87,10 @@ def run_train_cv(inputs, y, rows, train_mask):
             metrics = detail_metrics(y_tr, oof, threshold, rows_tr)
             metrics["f1_95pct_by_segment"] = bootstrap_f1(y_tr, oof, threshold, segments_tr)
             results[f"{model_name} · {input_name}"] = {"columns": x_tr.shape[1], "train_cv_oof": metrics}
+            oof_scores[f"{model_name}__{input_name}"] = oof.astype(np.float32)
             print(f"{model_name:18} {input_name:14} CV AP {metrics['average_precision']:.3f} · F1 {metrics['f1']:.3f} "
                   f"(P {metrics['precision']:.3f} / R {metrics['recall']:.3f})", flush=True)
-    return results
+    return results, oof_scores
 
 
 def run_validation_or_test(inputs, y, rows, train, val, test, eval_test):
@@ -140,7 +142,9 @@ def main():
         f"engineered_{len(data.engineered_names)}": data.engineered,  # 움직임 + 도로·주변차 전체
     }
     if MODE == "train_cv":
-        results = run_train_cv(inputs, data.y, data.rows, train)
+        results, oof_scores = run_train_cv(inputs, data.y, data.rows, train)
+        PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(PREDICTIONS_DIR / "oof_train_cv.npz", sample_id=data.ids[train], label=data.y[train], **oof_scores)
         show = ("train",)
     elif MODE in ("validation", "final_test"):
         results = run_validation_or_test(inputs, data.y, data.rows, train, val, test, MODE == "final_test")

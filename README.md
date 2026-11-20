@@ -81,6 +81,7 @@ data/                   GitHub에 올리지 않는다. 데이터셋은 Drive에�
   dataset/              Colab에서 받은 waymo_dataset.zip을 푼 폴더
   reviews/              검토 Colab에서 내려받은 판정 CSV (로컬 반영용)
   raw_samples/          로컬 확인·그림용 Waymo 원본 장면 7개
+  predictions/          train_baseline.py가 저장하는 train CV 예측값 (결과 그림용)
 notebooks/
   dataset_build.ipynb   데이터셋 만들기 (GitHub에 없음, Drive의 Colab과 같음)
   dataset_review.ipynb  배치 검토 (GitHub에 없음, Drive의 Colab과 같음)
@@ -91,11 +92,12 @@ src/
   features.py           engineering feature 99개 (노트북도 이 파일의 수식을 그대로 사용)
   models.py             트리 부스팅 설정 후보, 주행 구간 단위 bootstrap
   raw_scenario.py       Waymo 원본 읽기와 좌표 변환
-  plots/                분석 그림, 구축 과정 그림
+  plots/                그림 공통 스타일(style), 도로 장면(scene), 구축 과정(pipeline), 데이터 분석(analysis), 성능(results)
 scripts/
   train_baseline.py     로지스틱 회귀·랜덤 포레스트·트리 부스팅 × 기본 8개·움직임 64개·선택 76개·전체 99개
-  analyze_data.py       train만으로 라벨 구성, feature 분포·상관, PCA 비교
-  plot_pipeline.py      원본 장면 → 학습 표본 구축 과정 그림 7장
+  plot_results.py       train CV 결과 그림 4장 → figures/model_results/ (train_baseline.py 다음에 실행)
+  analyze_data.py       train만으로 라벨 구성, feature 분포·상관·선택, PCA 비교 그림 5장 → figures/data_analysis/
+  plot_pipeline.py      원본 장면 → 학습 표본 구축 과정 그림 9장 → figures/data_pipeline/
   apply_reviews.py      data/reviews/의 판정 CSV를 data/waymo_dataset.zip 기준으로 data/dataset/에 다시 반영
   build_notebooks.py    notebooks/source/*.py → .ipynb
   check_notebook_locally.py  raw_samples로 데이터셋 노트북을 로컬에서 끝까지 실행
@@ -108,6 +110,7 @@ results/, figures/      스크립트 결과
 
 ```bash
 uv run --python 3.12 scripts/train_baseline.py
+uv run --python 3.12 scripts/plot_results.py
 uv run --python 3.12 scripts/analyze_data.py
 uv run --python 3.12 scripts/plot_pipeline.py
 uv run --python 3.12 scripts/apply_reviews.py      # 판정 CSV를 data/reviews/에 넣은 뒤

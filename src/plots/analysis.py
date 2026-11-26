@@ -49,7 +49,7 @@ def plot_class_balance(y, rows, output):
     ax.set_title("train Label 분포", loc="left")
 
     ax = fig.add_subplot(grid[1])
-    lead = np.array([float(r["lead_time_s"]) for r, label in zip(rows, y) if label == 1])
+    lead = np.array([float(r["lead_time_s"]) for r, label in zip(rows, y) if label == 1 and r["lead_time_s"]])
     heights, _, _ = ax.hist(lead, bins=np.arange(-.05, 3.06, .1), color=TGT, edgecolor="white", lw=.6)  # 0.1초 시점마다 막대 하나
     ax.set_ylim(0, heights.max() * 1.22)
     edges = (0, *LEAD_EDGES, 9)

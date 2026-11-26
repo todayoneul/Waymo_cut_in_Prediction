@@ -1,4 +1,7 @@
 """notebooks/source/*.py(# %% 셀 구분)를 Colab 노트북(.ipynb)으로 바꿉니다."""
+import ast
+import base64
+import gzip
 import json
 import re
 from pathlib import Path
@@ -6,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "notebooks" / "source"
 NOTEBOOK_DIR = ROOT / "notebooks"
-NOTEBOOKS = ["dataset_build", "dataset_review"]
+NOTEBOOKS = ["dataset_build", "dataset_review", "build_bev"]
 BACKTICK = chr(96)
 
 
@@ -19,6 +22,19 @@ def feature_code():
 # 원본 텍스트를 셀 목록(종류, 내용)으로 나눕니다. 마크다운의 ~ 는 취소선이 되지 않게 바꿉니다.
 def split_cells(text):
     text = text.replace("\\" + BACKTICK, BACKTICK).replace("<<FEATURES>>", feature_code())
+    if "<<BEV_READER>>" in text:
+        # Embed the same pinned Scenario descriptor and CRC reader used by the common dataset.
+        descriptor = (ROOT / "data/raw_samples/scenario.desc").read_bytes()
+        encoded = base64.b64encode(gzip.compress(descriptor, mtime=0)).decode()
+        original = (SOURCE_DIR / "dataset_build.py").read_text().replace("%pip", "#pip").replace("<<FEATURES>>", "pass")
+        functions = {node.name: ast.get_source_segment(original, node) for node in ast.parse(original).body
+                     if isinstance(node, ast.FunctionDef) and node.name in {"masked_crc", "iter_records", "scenario_class"}}
+        reader = ("import base64, gzip, struct, google_crc32c\n"
+                  "from google.protobuf import descriptor_pb2, descriptor_pool, message_factory\n"
+                  + "\n\n".join(functions.values()) + "\nScenario = scenario_class(gzip.decompress(base64.b64decode(\n"
+                  + "\n".join(repr(encoded[i:i+100]) for i in range(0, len(encoded), 100)) + "\n)))")
+        module = (ROOT / "src/bev_sequence.py").read_text()
+        text = text.replace("<<BEV_READER>>", reader).replace("<<BEV_MODULE>>", module)
     cells = []
     for block in re.split(r"^# %%", text, flags=re.M)[1:]:
         header, _, body = block.partition("\n")

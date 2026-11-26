@@ -147,3 +147,17 @@ uv run --python 3.12 scripts/train_baseline.py
 ## 데이터 공유
 
 `data/`의 파일은 Waymo Dataset License(비상업적 이용)를 따른다. Waymo 이용 약관에 동의하고 등록한 팀원과만 공유한다.
+
+### Part D · 과거 1초 BEV
+
+[build_bev.ipynb](https://colab.research.google.com/drive/1_MLlpAHVqvZlnhrvdeK2YSlpVwveU-aD)는 검토를 반영한 기존 표본을 원본 장면에 다시 연결한다. 기본 범위는 Train 00000번이다. 결과는 내 드라이브의 `bev_sequences/train_00000.zip`에 저장한다. 다른 Train 파일을 변환할 때는 첫 준비 셀의 `FILE_NUMBERS`에 해당 번호를 넣는다. 완료 파일은 저장된 표본과 라벨이 일치할 때 재사용한다.
+
+로컬에서는 ZIP을 `data/bev_sequences/`에 놓고 프로젝트 루트에서 실행한다.
+
+```sh
+uv run --python 3.12 scripts/check_bev_sequence.py data/bev_sequences/train_00000.zip
+```
+
+검사기는 전체 ID·최종 라벨·회귀 정답을 대조하고, 두 차량의 11개 위치를 기존 `X_sequence` 및 두 해상도의 차량 마스크와 비교한다. ZIP 옆에 양성·음성 비교 GIF를 저장한다. 왼쪽은 1m, 오른쪽은 0.2m 격자다.
+
+로컬 모델은 ZIP의 `manifest.json`에서 표본의 `member`를 찾아 그 NPZ를 읽고, `src.bev_sequence.read_frames(arrays, "20cm")`로 (11, 5, 240, 480) 입력을 복원한다. 다섯 채널은 차로 중심선, 차선·도로 경계, 기준 차량, 상대 차량, 주변 차량 순이다. 기준 차량 차체는 두 해상도 모두 4.7 × 2.0m로 통일했다. 모든 시점은 현재 기준 차량의 좌표계를 사용한다. 분류 정답은 `label`, 진입 시간 정답은 `time_target_s`이며 값이 없는 사례는 회귀 손실에서 제외한다.

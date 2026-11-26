@@ -2,12 +2,13 @@
   "mode": "train_cv",
   "counts": {
     "train": {
-      "samples": 117508,
+      "samples": 117502,
       "source_files": 40,
       "label_sources": {
-        "rule": 117508
+        "rule": 117188,
+        "human": 314
       },
-      "positives": 1600
+      "positives": 1585
     },
     "validation": {
       "samples": 29274,
@@ -28,760 +29,760 @@
     "logistic · basic_8": {
       "columns": 8,
       "train_cv_oof": {
-        "average_precision": 0.066717132715106,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.6833605801584015,
-        "threshold": 0.046657362706073235,
-        "precision": 0.12348098784790279,
-        "recall": 0.196875,
-        "f1": 0.15177065767284992,
-        "true_negative": 113672,
-        "false_positive": 2236,
-        "false_negative": 1285,
-        "true_positive": 315,
+        "average_precision": 0.06279935750724107,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.6852128041469029,
+        "threshold": 0.046523523824929046,
+        "precision": 0.11785714285714285,
+        "recall": 0.18738170347003155,
+        "f1": 0.14470158343483558,
+        "true_negative": 113694,
+        "false_positive": 2223,
+        "false_negative": 1288,
+        "true_positive": 297,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 102,
-            "total": 344
+            "found": 98,
+            "total": 336
           },
           "1-2s": {
-            "found": 140,
-            "total": 611
+            "found": 130,
+            "total": 605
           },
           "2-3s": {
-            "found": 73,
-            "total": 645
+            "found": 69,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.15110049680092727,
-          "other_vehicle": 0.0563148811231356
+          "waymo_sdc": 0.14785898544442494,
+          "other_vehicle": 0.051996607437694055
         },
         "f1_95pct_by_segment": [
-          0.1361266841008689,
-          0.16640103946067555
+          0.12968975303747948,
+          0.16071634598702247
         ]
       }
     },
     "logistic_balanced · basic_8": {
       "columns": 8,
       "train_cv_oof": {
-        "average_precision": 0.04094669724928755,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.7331465149083756,
-        "threshold": 0.7143912352528764,
-        "precision": 0.05117324013979031,
-        "recall": 0.25625,
-        "f1": 0.08531002913025384,
-        "true_negative": 108306,
-        "false_positive": 7602,
-        "false_negative": 1190,
-        "true_positive": 410,
+        "average_precision": 0.03960567261321106,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.7331864861752897,
+        "threshold": 0.7203961397018686,
+        "precision": 0.05145326001571092,
+        "recall": 0.24794952681388013,
+        "f1": 0.08522172828797571,
+        "true_negative": 108672,
+        "false_positive": 7245,
+        "false_negative": 1192,
+        "true_positive": 393,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 103,
-            "total": 344
+            "found": 101,
+            "total": 336
           },
           "1-2s": {
-            "found": 171,
-            "total": 611
+            "found": 161,
+            "total": 605
           },
           "2-3s": {
-            "found": 136,
-            "total": 645
+            "found": 131,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.09383420698568395,
-          "other_vehicle": 0.033712691472870676
+          "waymo_sdc": 0.09384135569934929,
+          "other_vehicle": 0.032130865701137976
         },
         "f1_95pct_by_segment": [
-          0.07733900984585325,
-          0.0929917153276156
+          0.0769939994449993,
+          0.0939434630631847
         ]
       }
     },
     "random_forest · basic_8": {
       "columns": 8,
       "train_cv_oof": {
-        "average_precision": 0.4946267863651424,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.952444791882355,
-        "threshold": 0.7831803906764712,
-        "precision": 0.5628787878787879,
-        "recall": 0.464375,
-        "f1": 0.5089041095890411,
-        "true_negative": 115331,
-        "false_positive": 577,
-        "false_negative": 857,
-        "true_positive": 743,
+        "average_precision": 0.48661064208005,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9523424693438189,
+        "threshold": 0.7527123305571215,
+        "precision": 0.5288526816021725,
+        "recall": 0.4914826498422713,
+        "f1": 0.5094833224329627,
+        "true_negative": 115223,
+        "false_positive": 694,
+        "false_negative": 806,
+        "true_positive": 779,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 223,
-            "total": 344
+            "found": 224,
+            "total": 336
           },
           "1-2s": {
-            "found": 346,
-            "total": 611
+            "found": 371,
+            "total": 605
           },
           "2-3s": {
-            "found": 174,
-            "total": 645
+            "found": 184,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.6879364578955229,
-          "other_vehicle": 0.4395528418467524
+          "waymo_sdc": 0.6804336479479527,
+          "other_vehicle": 0.4298495480705153
         },
         "f1_95pct_by_segment": [
-          0.4867831123752854,
-          0.5330151927185397
+          0.48786359695622217,
+          0.5302508489865223
         ]
       }
     },
     "boosting · basic_8": {
       "columns": 8,
       "train_cv_oof": {
-        "average_precision": 0.510231341176357,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9581916854315491,
-        "threshold": 0.25047590229195305,
-        "precision": 0.5408507765023632,
-        "recall": 0.500625,
-        "f1": 0.5199610516066212,
-        "true_negative": 115228,
-        "false_positive": 680,
-        "false_negative": 799,
-        "true_positive": 801,
+        "average_precision": 0.5062331081325746,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9589480170041171,
+        "threshold": 0.20388152376293153,
+        "precision": 0.49850924269528923,
+        "recall": 0.5274447949526814,
+        "f1": 0.5125689760882894,
+        "true_negative": 115076,
+        "false_positive": 841,
+        "false_negative": 749,
+        "true_positive": 836,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 226,
-            "total": 344
+            "found": 227,
+            "total": 336
           },
           "1-2s": {
-            "found": 378,
-            "total": 611
+            "found": 395,
+            "total": 605
           },
           "2-3s": {
-            "found": 197,
-            "total": 645
+            "found": 214,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.7152395091884026,
-          "other_vehicle": 0.4489484771981147
+          "waymo_sdc": 0.7118220286637922,
+          "other_vehicle": 0.4442119373144714
         },
         "f1_95pct_by_segment": [
-          0.4984411902875289,
-          0.5416185513946236
+          0.4906101618038875,
+          0.5319544897333741
         ]
       }
     },
     "boosting_balanced · basic_8": {
       "columns": 8,
       "train_cv_oof": {
-        "average_precision": 0.5056763803386649,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9582181207293715,
-        "threshold": 0.9371516968509085,
-        "precision": 0.5209390862944162,
-        "recall": 0.513125,
-        "f1": 0.5170025188916877,
-        "true_negative": 115153,
-        "false_positive": 755,
-        "false_negative": 779,
-        "true_positive": 821,
+        "average_precision": 0.5002182502482317,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9587632796870403,
+        "threshold": 0.9556747894130458,
+        "precision": 0.604496253122398,
+        "recall": 0.4580441640378549,
+        "f1": 0.5211773151471644,
+        "true_negative": 115442,
+        "false_positive": 475,
+        "false_negative": 859,
+        "true_positive": 726,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 235,
-            "total": 344
+            "found": 216,
+            "total": 336
           },
           "1-2s": {
-            "found": 385,
-            "total": 611
+            "found": 344,
+            "total": 605
           },
           "2-3s": {
-            "found": 201,
-            "total": 645
+            "found": 166,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.7138800557773387,
-          "other_vehicle": 0.44536370241073303
+          "waymo_sdc": 0.7138848241199811,
+          "other_vehicle": 0.43940144781781476
         },
         "f1_95pct_by_segment": [
-          0.49538444373605356,
-          0.5383237984125645
+          0.4989241805696486,
+          0.542644581459643
         ]
       }
     },
     "logistic · motion_64": {
       "columns": 64,
       "train_cv_oof": {
-        "average_precision": 0.4142494989480907,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9270087914552921,
-        "threshold": 0.2626070200744585,
-        "precision": 0.5259417199715707,
-        "recall": 0.4625,
-        "f1": 0.492184901895577,
-        "true_negative": 115241,
-        "false_positive": 667,
-        "false_negative": 860,
-        "true_positive": 740,
+        "average_precision": 0.4162805733366818,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9252729102453351,
+        "threshold": 0.2641274083138399,
+        "precision": 0.5265423242467718,
+        "recall": 0.4630914826498423,
+        "f1": 0.4927828130245049,
+        "true_negative": 115257,
+        "false_positive": 660,
+        "false_negative": 851,
+        "true_positive": 734,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 243,
-            "total": 344
+            "found": 239,
+            "total": 336
           },
           "1-2s": {
             "found": 361,
-            "total": 611
+            "total": 605
           },
           "2-3s": {
-            "found": 136,
-            "total": 645
+            "found": 134,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.6063385167428547,
-          "other_vehicle": 0.36488618902623127
+          "waymo_sdc": 0.6060285410776253,
+          "other_vehicle": 0.36742606646305437
         },
         "f1_95pct_by_segment": [
-          0.468744880406291,
-          0.5159025302993552
+          0.4707807354242499,
+          0.5161157398695817
         ]
       }
     },
     "logistic_balanced · motion_64": {
       "columns": 64,
       "train_cv_oof": {
-        "average_precision": 0.289984337742079,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9429712088466714,
-        "threshold": 0.9542837628641504,
-        "precision": 0.3795938104448743,
-        "recall": 0.490625,
-        "f1": 0.42802617230098144,
-        "true_negative": 114625,
-        "false_positive": 1283,
-        "false_negative": 815,
-        "true_positive": 785,
+        "average_precision": 0.28618411099437197,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9420641588731674,
+        "threshold": 0.9498389746919714,
+        "precision": 0.3656648451730419,
+        "recall": 0.5066246056782334,
+        "f1": 0.42475535572599843,
+        "true_negative": 114524,
+        "false_positive": 1393,
+        "false_negative": 782,
+        "true_positive": 803,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 251,
-            "total": 344
+            "found": 246,
+            "total": 336
           },
           "1-2s": {
-            "found": 382,
-            "total": 611
+            "found": 396,
+            "total": 605
           },
           "2-3s": {
-            "found": 152,
-            "total": 645
+            "found": 161,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.4782358808619627,
-          "other_vehicle": 0.25381234109917533
+          "waymo_sdc": 0.4731340933468294,
+          "other_vehicle": 0.2500669578292392
         },
         "f1_95pct_by_segment": [
-          0.4065079584112052,
-          0.44852373715598526
+          0.40491743086414494,
+          0.4442731260037776
         ]
       }
     },
     "random_forest · motion_64": {
       "columns": 64,
       "train_cv_oof": {
-        "average_precision": 0.6802422764383482,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.975156166420782,
-        "threshold": 0.7549290910683121,
-        "precision": 0.6879942487419123,
-        "recall": 0.598125,
-        "f1": 0.6399197592778335,
-        "true_negative": 115474,
-        "false_positive": 434,
-        "false_negative": 643,
-        "true_positive": 957,
+        "average_precision": 0.677359172785102,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9741508316798739,
+        "threshold": 0.7795637340805709,
+        "precision": 0.7018209408194234,
+        "recall": 0.583596214511041,
+        "f1": 0.6372717878057182,
+        "true_negative": 115524,
+        "false_positive": 393,
+        "false_negative": 660,
+        "true_positive": 925,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 254,
-            "total": 344
+            "found": 245,
+            "total": 336
           },
           "1-2s": {
-            "found": 448,
-            "total": 611
+            "found": 435,
+            "total": 605
           },
           "2-3s": {
-            "found": 255,
-            "total": 645
+            "found": 245,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.7972378428539406,
-          "other_vehicle": 0.6472166044179718
+          "waymo_sdc": 0.7979219264506514,
+          "other_vehicle": 0.643141074237228
         },
         "f1_95pct_by_segment": [
-          0.6184568963334731,
-          0.6622514502042134
+          0.6153207161144382,
+          0.6580189409705239
         ]
       }
     },
     "boosting · motion_64": {
       "columns": 64,
       "train_cv_oof": {
-        "average_precision": 0.6959859645315568,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9772676497739586,
-        "threshold": 0.3444401544928717,
-        "precision": 0.7223053892215568,
-        "recall": 0.603125,
-        "f1": 0.6573569482288828,
-        "true_negative": 115537,
-        "false_positive": 371,
-        "false_negative": 635,
-        "true_positive": 965,
+        "average_precision": 0.6968477789807037,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9775304090773751,
+        "threshold": 0.3991903454825382,
+        "precision": 0.7624897624897625,
+        "recall": 0.5873817034700315,
+        "f1": 0.6635780470420527,
+        "true_negative": 115627,
+        "false_positive": 290,
+        "false_negative": 654,
+        "true_positive": 931,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 261,
-            "total": 344
+            "found": 247,
+            "total": 336
           },
           "1-2s": {
-            "found": 456,
-            "total": 611
+            "found": 444,
+            "total": 605
           },
           "2-3s": {
-            "found": 248,
-            "total": 645
+            "found": 240,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.8036351913844212,
-          "other_vehicle": 0.6627420614702709
+          "waymo_sdc": 0.8058931025858311,
+          "other_vehicle": 0.6625632924569053
         },
         "f1_95pct_by_segment": [
-          0.6376004233486905,
-          0.6779325928938429
+          0.6439198989445065,
+          0.6836138038323534
         ]
       }
     },
     "boosting_balanced · motion_64": {
       "columns": 64,
       "train_cv_oof": {
-        "average_precision": 0.7067538960735196,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9766967821461849,
-        "threshold": 0.9349189326252898,
-        "precision": 0.7094259390503189,
-        "recall": 0.625625,
-        "f1": 0.6648953835934905,
-        "true_negative": 115498,
-        "false_positive": 410,
-        "false_negative": 599,
-        "true_positive": 1001,
+        "average_precision": 0.7058291507084834,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9771928946549349,
+        "threshold": 0.9338279088543556,
+        "precision": 0.7048951048951049,
+        "recall": 0.63596214511041,
+        "f1": 0.6686567164179105,
+        "true_negative": 115495,
+        "false_positive": 422,
+        "false_negative": 577,
+        "true_positive": 1008,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 260,
-            "total": 344
+            "found": 258,
+            "total": 336
           },
           "1-2s": {
-            "found": 476,
-            "total": 611
+            "found": 485,
+            "total": 605
           },
           "2-3s": {
             "found": 265,
-            "total": 645
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.804296027169178,
-          "other_vehicle": 0.6770932703606458
+          "waymo_sdc": 0.8103584274832063,
+          "other_vehicle": 0.6736649354426709
         },
         "f1_95pct_by_segment": [
-          0.6445171829307447,
-          0.6861276097102084
+          0.6492810335361937,
+          0.6894008150727096
         ]
       }
     },
     "logistic · selected_76": {
       "columns": 76,
       "train_cv_oof": {
-        "average_precision": 0.6084088138582022,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9527482572384993,
-        "threshold": 0.3281918110462188,
-        "precision": 0.7055167055167055,
-        "recall": 0.5675,
-        "f1": 0.6290266712850711,
-        "true_negative": 115529,
-        "false_positive": 379,
-        "false_negative": 692,
-        "true_positive": 908,
+        "average_precision": 0.6161747804600791,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9506469343927665,
+        "threshold": 0.2960250878779051,
+        "precision": 0.685131195335277,
+        "recall": 0.5930599369085173,
+        "f1": 0.6357795062563408,
+        "true_negative": 115485,
+        "false_positive": 432,
+        "false_negative": 645,
+        "true_positive": 940,
         "recall_by_lead_time": {
           "0-1s": {
             "found": 296,
-            "total": 344
+            "total": 336
           },
           "1-2s": {
-            "found": 432,
-            "total": 611
+            "found": 442,
+            "total": 605
           },
           "2-3s": {
-            "found": 180,
-            "total": 645
+            "found": 202,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.7274870002990383,
-          "other_vehicle": 0.574818282362341
+          "waymo_sdc": 0.7270214795090073,
+          "other_vehicle": 0.5843762930311083
         },
         "f1_95pct_by_segment": [
-          0.6093130344633373,
-          0.6493868787823702
+          0.6145049630216456,
+          0.6558423701045405
         ]
       }
     },
     "logistic_balanced · selected_76": {
       "columns": 76,
       "train_cv_oof": {
-        "average_precision": 0.44121787074528424,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9647418049228699,
-        "threshold": 0.9543814924062357,
-        "precision": 0.48679621325361233,
-        "recall": 0.610625,
-        "f1": 0.5417244247296923,
-        "true_negative": 114878,
-        "false_positive": 1030,
-        "false_negative": 623,
-        "true_positive": 977,
+        "average_precision": 0.45062797240203084,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9641366800878329,
+        "threshold": 0.9630669411635309,
+        "precision": 0.5115362971299944,
+        "recall": 0.5735015772870663,
+        "f1": 0.5407495538370017,
+        "true_negative": 115049,
+        "false_positive": 868,
+        "false_negative": 676,
+        "true_positive": 909,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 320,
-            "total": 344
+            "found": 308,
+            "total": 336
           },
           "1-2s": {
-            "found": 455,
-            "total": 611
+            "found": 425,
+            "total": 605
           },
           "2-3s": {
-            "found": 202,
-            "total": 645
+            "found": 176,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.6333172696992919,
-          "other_vehicle": 0.395467489382613
+          "waymo_sdc": 0.6325011336884782,
+          "other_vehicle": 0.4057332403537286
         },
         "f1_95pct_by_segment": [
-          0.5221037605062937,
-          0.5617319520894851
+          0.5194429937541903,
+          0.5614480174322992
         ]
       }
     },
     "random_forest · selected_76": {
       "columns": 76,
       "train_cv_oof": {
-        "average_precision": 0.7784146511917613,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9848037182506816,
-        "threshold": 0.6783583477562771,
-        "precision": 0.778421433743664,
-        "recall": 0.671875,
-        "f1": 0.7212344850721234,
-        "true_negative": 115602,
-        "false_positive": 306,
-        "false_negative": 525,
-        "true_positive": 1075,
+        "average_precision": 0.7749619243978081,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.984282036458753,
+        "threshold": 0.6883152088918587,
+        "precision": 0.7825112107623319,
+        "recall": 0.6605678233438486,
+        "f1": 0.7163872733492986,
+        "true_negative": 115626,
+        "false_positive": 291,
+        "false_negative": 538,
+        "true_positive": 1047,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 304,
-            "total": 344
+            "found": 293,
+            "total": 336
           },
           "1-2s": {
-            "found": 495,
-            "total": 611
+            "found": 483,
+            "total": 605
           },
           "2-3s": {
-            "found": 276,
-            "total": 645
+            "found": 271,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.8371261037610963,
-          "other_vehicle": 0.7613515280215999
+          "waymo_sdc": 0.8341853928779391,
+          "other_vehicle": 0.7572120981337757
         },
         "f1_95pct_by_segment": [
-          0.7026643288062052,
-          0.7402934080770724
+          0.6976030629274284,
+          0.7356978995042034
         ]
       }
     },
     "boosting · selected_76": {
       "columns": 76,
       "train_cv_oof": {
-        "average_precision": 0.8261382097723511,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9903896786675639,
-        "threshold": 0.3350593532928146,
-        "precision": 0.8111346018322763,
-        "recall": 0.719375,
-        "f1": 0.7625041404438556,
-        "true_negative": 115640,
-        "false_positive": 268,
-        "false_negative": 449,
-        "true_positive": 1151,
+        "average_precision": 0.8196230566499167,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.990063182649807,
+        "threshold": 0.3700436699500138,
+        "precision": 0.8149779735682819,
+        "recall": 0.7003154574132492,
+        "f1": 0.7533084492704445,
+        "true_negative": 115665,
+        "false_positive": 252,
+        "false_negative": 475,
+        "true_positive": 1110,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 313,
-            "total": 344
+            "found": 306,
+            "total": 336
           },
           "1-2s": {
-            "found": 528,
-            "total": 611
+            "found": 513,
+            "total": 605
           },
           "2-3s": {
-            "found": 310,
-            "total": 645
+            "found": 291,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.8718885779336556,
-          "other_vehicle": 0.8114487174093367
+          "waymo_sdc": 0.8708975399217416,
+          "other_vehicle": 0.8026671462812062
         },
         "f1_95pct_by_segment": [
-          0.745649049194467,
-          0.779159085801752
+          0.7358712902311249,
+          0.7707085581039224
         ]
       }
     },
     "boosting_balanced · selected_76": {
       "columns": 76,
       "train_cv_oof": {
-        "average_precision": 0.8284051409014878,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9894538826051695,
-        "threshold": 0.9388857111247195,
-        "precision": 0.8426547352721849,
-        "recall": 0.70625,
-        "f1": 0.768446106766406,
-        "true_negative": 115697,
-        "false_positive": 211,
-        "false_negative": 470,
-        "true_positive": 1130,
+        "average_precision": 0.8264832381571161,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9895660739957821,
+        "threshold": 0.9360475484083377,
+        "precision": 0.8346923647146034,
+        "recall": 0.7104100946372239,
+        "f1": 0.7675528289025222,
+        "true_negative": 115694,
+        "false_positive": 223,
+        "false_negative": 459,
+        "true_positive": 1126,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 312,
-            "total": 344
+            "found": 306,
+            "total": 336
           },
           "1-2s": {
-            "found": 526,
-            "total": 611
+            "found": 523,
+            "total": 605
           },
           "2-3s": {
-            "found": 292,
-            "total": 645
+            "found": 297,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.8791856327045842,
-          "other_vehicle": 0.8115571247941311
+          "waymo_sdc": 0.8727862038919629,
+          "other_vehicle": 0.8110695608127049
         },
         "f1_95pct_by_segment": [
-          0.752020307412882,
-          0.7871399844683877
+          0.7502647776376645,
+          0.7845675419973406
         ]
       }
     },
     "logistic · engineered_99": {
       "columns": 99,
       "train_cv_oof": {
-        "average_precision": 0.6133695868343604,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9529294300220865,
-        "threshold": 0.31800748068361256,
-        "precision": 0.6994660564454614,
-        "recall": 0.573125,
-        "f1": 0.6300240467193404,
-        "true_negative": 115514,
-        "false_positive": 394,
-        "false_negative": 683,
-        "true_positive": 917,
+        "average_precision": 0.6168154380839328,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9500534879071121,
+        "threshold": 0.2992478306256794,
+        "precision": 0.6943820224719102,
+        "recall": 0.5848580441640379,
+        "f1": 0.6349315068493151,
+        "true_negative": 115509,
+        "false_positive": 408,
+        "false_negative": 658,
+        "true_positive": 927,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 298,
-            "total": 344
+            "found": 294,
+            "total": 336
           },
           "1-2s": {
-            "found": 438,
-            "total": 611
+            "found": 441,
+            "total": 605
           },
           "2-3s": {
-            "found": 181,
-            "total": 645
+            "found": 192,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.7298305016495271,
-          "other_vehicle": 0.5797068744659123
+          "waymo_sdc": 0.7269420796207546,
+          "other_vehicle": 0.5853104655333599
         },
         "f1_95pct_by_segment": [
-          0.6088395103023506,
-          0.6507057807906887
+          0.6121747082627113,
+          0.6543340844383853
         ]
       }
     },
     "logistic_balanced · engineered_99": {
       "columns": 99,
       "train_cv_oof": {
-        "average_precision": 0.44471915556153013,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9645528889291508,
-        "threshold": 0.9609653167505897,
-        "precision": 0.5086393088552916,
-        "recall": 0.58875,
-        "f1": 0.5457705677867902,
-        "true_negative": 114998,
-        "false_positive": 910,
-        "false_negative": 658,
-        "true_positive": 942,
+        "average_precision": 0.45084333655112363,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9634364782219761,
+        "threshold": 0.9545837220544187,
+        "precision": 0.48880976602238047,
+        "recall": 0.6063091482649843,
+        "f1": 0.5412559842297944,
+        "true_negative": 114912,
+        "false_positive": 1005,
+        "false_negative": 624,
+        "true_positive": 961,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 318,
-            "total": 344
+            "found": 313,
+            "total": 336
           },
           "1-2s": {
-            "found": 437,
-            "total": 611
+            "found": 448,
+            "total": 605
           },
           "2-3s": {
-            "found": 187,
-            "total": 645
+            "found": 200,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.6373491750868039,
-          "other_vehicle": 0.39849462751862746
+          "waymo_sdc": 0.6333385260231096,
+          "other_vehicle": 0.40569193761071237
         },
         "f1_95pct_by_segment": [
-          0.5260260629781177,
-          0.566540593151133
+          0.5203021587414918,
+          0.5605626310448508
         ]
       }
     },
     "random_forest · engineered_99": {
       "columns": 99,
       "train_cv_oof": {
-        "average_precision": 0.7765558463775587,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9859932392500951,
-        "threshold": 0.6315632424504795,
-        "precision": 0.7336849044166117,
-        "recall": 0.695625,
-        "f1": 0.714148219441771,
-        "true_negative": 115504,
-        "false_positive": 404,
-        "false_negative": 487,
-        "true_positive": 1113,
+        "average_precision": 0.7722879165771227,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9853051959374063,
+        "threshold": 0.6641771033666507,
+        "precision": 0.7521067415730337,
+        "recall": 0.6757097791798107,
+        "f1": 0.711864406779661,
+        "true_negative": 115564,
+        "false_positive": 353,
+        "false_negative": 514,
+        "true_positive": 1071,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 305,
-            "total": 344
+            "found": 293,
+            "total": 336
           },
           "1-2s": {
-            "found": 512,
-            "total": 611
+            "found": 493,
+            "total": 605
           },
           "2-3s": {
-            "found": 296,
-            "total": 645
+            "found": 285,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.8394274763140189,
-          "other_vehicle": 0.758026522875353
+          "waymo_sdc": 0.8382506516159222,
+          "other_vehicle": 0.752137818228424
         },
         "f1_95pct_by_segment": [
-          0.6957108750388716,
-          0.7322925933277948
+          0.6924094944859387,
+          0.730524680685814
         ]
       }
     },
     "boosting · engineered_99": {
       "columns": 99,
       "train_cv_oof": {
-        "average_precision": 0.8238461648276103,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9901270889412292,
-        "threshold": 0.2791880013705441,
-        "precision": 0.7774130006565988,
-        "recall": 0.74,
-        "f1": 0.7582452769772654,
-        "true_negative": 115569,
-        "false_positive": 339,
-        "false_negative": 416,
-        "true_positive": 1184,
+        "average_precision": 0.819422543091145,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9904423237240155,
+        "threshold": 0.3452883149508767,
+        "precision": 0.8021428571428572,
+        "recall": 0.7085173501577287,
+        "f1": 0.752428810720268,
+        "true_negative": 115640,
+        "false_positive": 277,
+        "false_negative": 462,
+        "true_positive": 1123,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 320,
-            "total": 344
+            "found": 306,
+            "total": 336
           },
           "1-2s": {
-            "found": 535,
-            "total": 611
+            "found": 514,
+            "total": 605
           },
           "2-3s": {
-            "found": 329,
-            "total": 645
+            "found": 303,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.8720001336667076,
-          "other_vehicle": 0.8083296313274202
+          "waymo_sdc": 0.87020649125101,
+          "other_vehicle": 0.8024962704023942
         },
         "f1_95pct_by_segment": [
-          0.7411120259237249,
-          0.775356946372901
+          0.7356537673392182,
+          0.7700190319397235
         ]
       }
     },
     "boosting_balanced · engineered_99": {
       "columns": 99,
       "train_cv_oof": {
-        "average_precision": 0.8271367445165584,
-        "positive_rate": 0.013616094223372026,
-        "roc_auc": 0.9892787005642406,
-        "threshold": 0.9451831889867321,
-        "precision": 0.8510959939531368,
-        "recall": 0.70375,
-        "f1": 0.7704413274033527,
-        "true_negative": 115711,
-        "false_positive": 197,
-        "false_negative": 474,
-        "true_positive": 1126,
+        "average_precision": 0.8264814505076903,
+        "positive_rate": 0.013489132099879151,
+        "roc_auc": 0.9897381812598479,
+        "threshold": 0.9408847094195647,
+        "precision": 0.8492003046458492,
+        "recall": 0.7034700315457413,
+        "f1": 0.7694962042788129,
+        "true_negative": 115719,
+        "false_positive": 198,
+        "false_negative": 470,
+        "true_positive": 1115,
         "recall_by_lead_time": {
           "0-1s": {
-            "found": 314,
-            "total": 344
+            "found": 309,
+            "total": 336
           },
           "1-2s": {
-            "found": 521,
-            "total": 611
+            "found": 519,
+            "total": 605
           },
           "2-3s": {
-            "found": 291,
-            "total": 645
+            "found": 287,
+            "total": 643
           }
         },
         "ap_by_reference_type": {
-          "waymo_sdc": 0.8761416009033945,
-          "other_vehicle": 0.8112572673236681
+          "waymo_sdc": 0.8729190258363445,
+          "other_vehicle": 0.8110155076131786
         },
         "f1_95pct_by_segment": [
-          0.7537250009338463,
-          0.7884708921921301
+          0.7525693112960228,
+          0.7867035634661802
         ]
       }
     }

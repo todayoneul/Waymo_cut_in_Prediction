@@ -182,9 +182,18 @@ uv run --python 3.12 scripts/check_bev_sequence.py data/bev_sequences/train_0000
 
 모델은 3×3 합성곱(stride 2)·BatchNorm·ReLU 블록 3개, 3×6 공간 격자 평균, 64-unit 은닉층으로 구성되고 He 초기화를 쓴다. 11프레임 입력은 지도 2채널을 한 번, 차량 3채널(기준·상대·주변)을 프레임마다 쌓아 35채널이다. 20cm 입력은 먼저 5×5 stride-5 합성곱으로 1m 격자 크기에 맞춘 뒤 같은 블록을 지나므로 두 해상도의 수용영역이 같다. 학습은 양성 전부와 그 4배의 음성을 epoch마다 새로 뽑아 진행하고, 평가 점수에는 이 재추출로 생긴 확률 편향을 되돌리는 보정을 적용한다.
 
+라이브러리는 팀 스크립트와 같은 Python 3.12·numpy 2.5.5·scikit-learn 1.9.1·matplotlib 3.10.9에 torch 2.9.1을 더해 `scripts/bev/requirements.txt`에 고정했다. scikit-learn 버전이 같아야 BEV의 5개 평가 fold가 `train_baseline.py`의 fold와 표본 단위까지 같아져 트리 모델과 fold별로 짝지어 비교할 수 있다. macOS(MPS)와 CPU에서는 다른 팀 스크립트처럼 uv로 실행한다.
+
 ```sh
-pip install -r scripts/bev/requirements.txt          # PyTorch CUDA 빌드는 pytorch.org 안내 명령으로 설치
-python scripts/bev/check_data.py --crc --out data/training_runs/audit.json
+uv run --python 3.12 --with-requirements scripts/bev/requirements.txt scripts/bev/check_data.py --crc --out data/training_runs/audit.json
+uv run --python 3.12 --with-requirements scripts/bev/requirements.txt scripts/bev/train.py --resolution 1m --frames 11 --device mps --fold 1 --epochs 3 --out data/training_runs/smoke-1m-11f
+```
+
+NVIDIA GPU에서는 CUDA용 torch를 설치한 Python 3.12 이상 환경에 나머지 버전을 맞춘 뒤 `python`으로 실행한다.
+
+```sh
+pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cu130
+pip install numpy==2.5.5 scikit-learn==1.9.1 matplotlib==3.10.9
 python scripts/bev/lr_find.py --resolution 1m --frames 11 --device cuda --out data/training_runs/lr-1m-11f
 python scripts/bev/search.py --resolution 1m --frames 11 --device cuda --lr-min 5e-4 --lr-max 6e-3 --out data/training_runs/search-1m-11f
 python scripts/bev/train.py --resolution 1m --frames 11 --device cuda --fold 0 --lr 5.6e-3 --width 32 --weight-decay 1e-4 --batch 32 --out data/training_runs/cv-1m-11f
@@ -192,4 +201,4 @@ python scripts/bev/report.py data/training_runs/cv-1m-11f
 python scripts/bev/publish.py data/training_runs/cv-1m-11f
 ```
 
-`train.py`의 기본값은 epoch 상한 100, 내부 검증 AP가 0.001을 넘게 오르지 않은 epoch가 4번째면 학습률 절반, 8번째면 중단, 양성:음성 1:4, seed 1729다. 전체 옵션은 `--help`로 본다. `run.json`에는 설정, 입력 채널·파라미터 수, Git 커밋, `train.py`의 SHA-256, 라이브러리 버전과 GPU가 남는다. `results/bev/`에는 표본별 점수(`predictions.csv`), 구간 목록(`groups.csv`), 가중치(`best.pt`)를 올리지 않는다.
+`train.py`의 기본값은 epoch 상한 100, 내부 검증 AP가 0.001을 넘게 오르지 않은 epoch가 4번째면 학습률 절반, 8번째면 중단, 양성:음성 1:4, seed 1729다. 전체 옵션은 `--help`로 본다. `run.json`에는 설정, 입력 채널·파라미터 수, Git 커밋, `train.py`의 SHA-256, 라이브러리 버전과 GPU가 남는다. 서로 비교하는 실행은 `run.json`의 scikit-learn 버전이 같아야 같은 fold를 쓴다. `results/bev/`에는 표본별 점수(`predictions.csv`), 구간 목록(`groups.csv`), 가중치(`best.pt`)를 올리지 않는다.

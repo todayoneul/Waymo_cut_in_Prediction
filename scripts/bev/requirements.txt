@@ -1,8 +1,7 @@
-# Part D BEV 학습 도구(scripts/bev)를 실행해 결과를 만든 환경: Windows · Python 3.13.11 · NVIDIA RTX 5070
-# PyTorch CUDA 빌드는 https://pytorch.org/get-started/locally/ 의 안내 명령으로 설치한다(예: CUDA 13.0 빌드 2.9.1+cu130).
-# macOS(Python 3.11 · torch 2.11.0 · MPS)와 CPU에서도 같은 코드가 동작한다.
-torch==2.9.1
-numpy==2.4.4
-scikit-learn==1.8.0
+# Part D BEV 학습 도구(scripts/bev) 실행 환경. 팀 스크립트와 같은 버전에 torch만 더했다. Python 3.12 이상.
+# scikit-learn 버전이 같아야 BEV의 5개 평가 fold가 scripts/train_baseline.py의 fold와 같아진다(1.8.0은 배정이 다르다).
+# NVIDIA GPU에서는 먼저 pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cu130 으로 CUDA 빌드를 설치한다.
+numpy==2.5.5
+scikit-learn==1.9.1
 matplotlib==3.10.9
-threadpoolctl==3.6.0
+torch==2.9.1

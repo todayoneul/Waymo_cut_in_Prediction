@@ -49,7 +49,8 @@ def pick_device(name):
 
 
 class Sequences(Dataset):
-    def __init__(self, directory, count, resolution, frames, channels):
+    def __init__(self, directory, count, resolution, frames, channels, mirror=False):
+        self.mirror = mirror
         self.rows = []
         self.files = []
         self.handles = {}
@@ -91,7 +92,12 @@ class Sequences(Dataset):
         with np.load(io.BytesIO(self.handles[path].read(row["member"])), allow_pickle=False) as arrays:
             maps = np.unpackbits(arrays["map_" + self.resolution][self.map_layers], axis=-1)
             vehicles = np.unpackbits(arrays["cars_" + self.resolution][-self.frames:, self.vehicle_layers], axis=-1)
+            target_on_right = self.mirror and arrays["centers"][-1, 1, 1] < 0
         planes = np.concatenate((maps, vehicles.reshape(-1, *vehicles.shape[-2:])))
+        if target_on_right:
+            # Mirror about the reference vehicle's row (row r <-> H - r) so the target is always on the left (+y),
+            # the same convention src/features.py uses for the tabular features.
+            planes = np.roll(planes[:, ::-1], 1, axis=1)
         return torch.from_numpy(planes), int(row["label"])
 
     def __getstate__(self):
@@ -116,16 +122,21 @@ def make_loader(data, batch, workers, device):
                       persistent_workers=workers > 0, pin_memory=device == "cuda")
 
 
-def conv_block(in_channels, out_channels, kernel, stride, padding, batchnorm):
+def activation(name):
+    # Lec11 pp.12-15: leaky ReLU keeps a small gradient for negative inputs, so units cannot die.
+    return nn.LeakyReLU(0.01) if name == "leaky" else nn.ReLU()
+
+
+def conv_block(in_channels, out_channels, kernel, stride, padding, batchnorm, act="relu"):
     # Lec11 p.23: BN before the activation makes the convolution bias redundant.
     layers = [nn.Conv2d(in_channels, out_channels, kernel, stride=stride, padding=padding, bias=not batchnorm)]
     if batchnorm:
         layers.append(nn.BatchNorm2d(out_channels))
-    layers.append(nn.ReLU())
+    layers.append(activation(act))
     return layers
 
 
-def network(in_channels, resolution, width, dropout, batchnorm):
+def network(in_channels, resolution, width, dropout, batchnorm, act="relu"):
     """Conv -> [BatchNorm] -> ReLU blocks, a 3x6 spatial grid and a small dense head.
 
     The 1 m input (48x96) passes three 3x3 stride-2 blocks and ends at 6x12 (receptive field 15 m).
@@ -135,16 +146,17 @@ def network(in_channels, resolution, width, dropout, batchnorm):
     """
     layers = []
     if resolution == "20cm":
-        layers += conv_block(in_channels, width, 5, 5, 0, batchnorm)
+        layers += conv_block(in_channels, width, 5, 5, 0, batchnorm, act)
         in_channels = width
     for out_channels in (width, 2 * width, 4 * width):
-        layers += conv_block(in_channels, out_channels, 3, 2, 1, batchnorm)
+        layers += conv_block(in_channels, out_channels, 3, 2, 1, batchnorm, act)
         in_channels = out_channels
     model = nn.Sequential(*layers, nn.AdaptiveAvgPool2d((3, 6)), nn.Flatten(),
-                          nn.Linear(in_channels * 18, 64), nn.ReLU(), nn.Dropout(dropout), nn.Linear(64, 1))
+                          nn.Linear(in_channels * 18, 64), activation(act), nn.Dropout(dropout), nn.Linear(64, 1))
     for module in model.modules():
         if isinstance(module, (nn.Conv2d, nn.Linear)):
-            nn.init.kaiming_normal_(module.weight, nonlinearity="relu")  # He initialization, Lec11 pp.9-11
+            # He initialization, Lec11 pp.9-11
+            nn.init.kaiming_normal_(module.weight, a=0.01 if act == "leaky" else 0, nonlinearity="leaky_relu")
             if module.bias is not None:
                 nn.init.zeros_(module.bias)
     nn.init.xavier_uniform_(model[-1].weight)  # sigmoid output layer
@@ -196,7 +208,8 @@ def run_fold(args, data, loader, fold, fit, monitor, outer, device):
                 raise ValueError(f"{name} lacks both classes. Include more Train shards.")
             w.writerows((name, g) for g in np.unique(groups[subset]))
 
-    model = network(data.in_channels, args.resolution, args.width, args.dropout, not args.no_batchnorm).to(device)
+    model = network(data.in_channels, args.resolution, args.width, args.dropout, not args.no_batchnorm,
+                    args.activation).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     maximize = args.monitor == "ap"
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -290,6 +303,9 @@ def main():
     p.add_argument("--channels", choices=["all", "pair", "pair-map"], default="all")
     p.add_argument("--width", type=int, default=32, help="Channels of the first 1 m block. Later blocks use 2x and 4x")
     p.add_argument("--no-batchnorm", action="store_true", help="Remove BatchNorm2d (ablation)")
+    p.add_argument("--activation", choices=["relu", "leaky"], default="relu")
+    p.add_argument("--mirror", action="store_true",
+                   help="Flip rasters so the target is always on the reference vehicle's left, as in src/features.py")
     p.add_argument("--epochs", type=int, default=100, help="Upper bound. Early stopping usually ends earlier")
     p.add_argument("--batch", type=int, default=32)
     p.add_argument("--lr", type=float, default=.001)
@@ -315,9 +331,9 @@ def main():
         p.error("Invalid training parameters")
     if args.tune and args.fold == 0:
         p.error("--tune needs a single --fold")
-    data = Sequences(args.data, args.shards, args.resolution, args.frames, args.channels)
+    data = Sequences(args.data, args.shards, args.resolution, args.frames, args.channels, args.mirror)
     device = pick_device(args.device)
-    model = network(data.in_channels, args.resolution, args.width, args.dropout, not args.no_batchnorm)
+    model = network(data.in_channels, args.resolution, args.width, args.dropout, not args.no_batchnorm, args.activation)
     args.out.mkdir(parents=True, exist_ok=False)
     commit = subprocess.run(["git", "-C", str(args.repo), "rev-parse", "HEAD"], capture_output=True, text=True)
     save_json(args.out / "run.json", dict(started=datetime.now(timezone.utc).isoformat(),

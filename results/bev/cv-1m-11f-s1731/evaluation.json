@@ -1,0 +1,46 @@
+{
+  "folds": [
+    "fold-1"
+  ],
+  "outer_n": 23501,
+  "positives": 338,
+  "pooled_ap": 0.13874709267130675,
+  "fold_ap": {
+    "fold-1": 0.13874709267130675
+  },
+  "mean_fold_ap": 0.13874709267130675,
+  "confusion": [
+    [
+      22769,
+      394
+    ],
+    [
+      246,
+      92
+    ]
+  ],
+  "lead_bins": [
+    {
+      "lower_s": 0,
+      "upper_s": 1,
+      "found": 28,
+      "positives": 82,
+      "recall": 0.34146341463414637
+    },
+    {
+      "lower_s": 1,
+      "upper_s": 2,
+      "found": 37,
+      "positives": 131,
+      "recall": 0.2824427480916031
+    },
+    {
+      "lower_s": 2,
+      "upper_s": 3,
+      "found": 27,
+      "positives": 125,
+      "recall": 0.216
+    }
+  ],
+  "positives_missing_time": 0
+}

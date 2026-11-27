@@ -1,0 +1,25 @@
+{
+  "best_epoch": 8,
+  "end_epoch": 16,
+  "monitor": "ap",
+  "best_monitor_value": 0.24937966271327153,
+  "prior_shift_logit": -2.916707467762949,
+  "stop_reason": "patience",
+  "fit_n": 70501,
+  "monitor_n": 23501,
+  "outer_n": 23500,
+  "best_monitor_ap": 0.24937966271327153,
+  "metrics": {
+    "average_precision": 0.30780637119540677,
+    "positive_rate": 0.014042553191489362,
+    "roc_auc": 0.9339476334340382,
+    "threshold": 0.25635650753974915,
+    "precision": 0.32723112128146453,
+    "recall": 0.43333333333333335,
+    "f1": 0.3728813559322034,
+    "true_negative": 22876,
+    "false_positive": 294,
+    "false_negative": 187,
+    "true_positive": 143
+  }
+}

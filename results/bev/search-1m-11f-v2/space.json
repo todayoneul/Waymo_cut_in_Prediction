@@ -1,0 +1,48 @@
+{
+  "lr": [
+    0.0005,
+    0.006
+  ],
+  "width": [
+    16,
+    32,
+    48
+  ],
+  "dropout": [
+    0.0,
+    0.2,
+    0.4
+  ],
+  "weight_decay": [
+    0.0,
+    1e-05,
+    0.0001,
+    0.001
+  ],
+  "batch": [
+    32,
+    64
+  ],
+  "args": {
+    "repo": "C:\\Users\\leegy\\Desktop\\\uae30\uacc4\ud559\uc2b5\\Waymo_cut_in_Prediction",
+    "data": "None",
+    "out": "data\\training_runs\\search-1m-11f-v2",
+    "shards": "40",
+    "resolution": "1m",
+    "frames": "11",
+    "channels": "all",
+    "trials": "10",
+    "lr_min": "0.0005",
+    "lr_max": "0.006",
+    "widths": "16,32,48",
+    "dropouts": "0,0.2,0.4",
+    "weight_decays": "0,1e-5,1e-4,1e-3",
+    "batches": "32,64",
+    "epochs": "100",
+    "patience": "8",
+    "lr_patience": "3",
+    "workers": "8",
+    "device": "cuda",
+    "seed": "1729"
+  }
+}

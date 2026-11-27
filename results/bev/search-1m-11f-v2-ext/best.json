@@ -1,0 +1,13 @@
+{
+  "trial": 1,
+  "lr": 0.006105204314578138,
+  "width": 48,
+  "dropout": 0.2,
+  "weight_decay": 0.0001,
+  "batch": 32,
+  "status": "ok",
+  "best_monitor_ap": 0.33334960762017374,
+  "best_epoch": 33,
+  "end_epoch": 41,
+  "stop_reason": "patience"
+}

@@ -1,0 +1,12 @@
+{
+  "best_epoch": 24,
+  "end_epoch": 32,
+  "monitor": "ap",
+  "best_monitor_value": 0.3111632047585013,
+  "prior_shift_logit": -2.914555572145108,
+  "stop_reason": "patience",
+  "fit_n": 70501,
+  "monitor_n": 23500,
+  "outer_n": null,
+  "best_monitor_ap": 0.3111632047585013
+}

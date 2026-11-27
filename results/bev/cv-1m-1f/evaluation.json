@@ -1,0 +1,54 @@
+{
+  "folds": [
+    "fold-1",
+    "fold-2",
+    "fold-3",
+    "fold-4",
+    "fold-5"
+  ],
+  "outer_n": 117502,
+  "positives": 1585,
+  "pooled_ap": 0.21015102568772698,
+  "fold_ap": {
+    "fold-1": 0.31926054186424824,
+    "fold-2": 0.28487725646132905,
+    "fold-3": 0.01225531914893617,
+    "fold-4": 0.30554999347581724,
+    "fold-5": 0.21495639499621652
+  },
+  "mean_fold_ap": 0.22737990118930945,
+  "confusion": [
+    [
+      91601,
+      24316
+    ],
+    [
+      805,
+      780
+    ]
+  ],
+  "lead_bins": [
+    {
+      "lower_s": 0,
+      "upper_s": 1,
+      "found": 208,
+      "positives": 336,
+      "recall": 0.6190476190476191
+    },
+    {
+      "lower_s": 1,
+      "upper_s": 2,
+      "found": 311,
+      "positives": 605,
+      "recall": 0.5140495867768595
+    },
+    {
+      "lower_s": 2,
+      "upper_s": 3,
+      "found": 261,
+      "positives": 643,
+      "recall": 0.4059097978227061
+    }
+  ],
+  "positives_missing_time": 1
+}

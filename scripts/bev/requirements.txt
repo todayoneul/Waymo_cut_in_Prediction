@@ -1,0 +1,8 @@
+# Part D BEV 학습 도구(scripts/bev)를 실행해 결과를 만든 환경: Windows · Python 3.13.11 · NVIDIA RTX 5070
+# PyTorch CUDA 빌드는 https://pytorch.org/get-started/locally/ 의 안내 명령으로 설치한다(예: CUDA 13.0 빌드 2.9.1+cu130).
+# macOS(Python 3.11 · torch 2.11.0 · MPS)와 CPU에서도 같은 코드가 동작한다.
+torch==2.9.1
+numpy==2.4.4
+scikit-learn==1.8.0
+matplotlib==3.10.9
+threadpoolctl==3.6.0

@@ -92,8 +92,11 @@ src/
   features.py           engineering feature 99개 (노트북도 이 파일의 수식을 그대로 사용)
   models.py             트리 부스팅 설정 후보, 주행 구간 단위 bootstrap
   raw_scenario.py       Waymo 원본 읽기와 좌표 변환
+  bev_sequence.py       과거 1초 BEV ZIP 만들기·읽기 (build_bev Colab과 로컬 검사가 함께 사용)
   plots/                그림 공통 스타일(style), 도로 장면(scene), 구축 과정(pipeline), 데이터 분석(analysis), 성능(results)
 scripts/
+  bev/                  Part D BEV 학습·탐색·기록 도구 (아래 Part D · BEV 학습과 기록)
+  check_bev_sequence.py BEV ZIP 하나를 표와 대조하고 양성·음성 비교 GIF 저장
   train_baseline.py     로지스틱 회귀·랜덤 포레스트·트리 부스팅 × 기본 8개·움직임 64개·선택 76개·전체 99개
   plot_results.py       train CV 결과 그림 4장 → figures/model_results/ (train_baseline.py 다음에 실행)
   analyze_data.py       train만으로 라벨 구성, feature 분포·상관·선택, PCA 비교 그림 5장 → figures/data_analysis/
@@ -161,3 +164,32 @@ uv run --python 3.12 scripts/check_bev_sequence.py data/bev_sequences/train_0000
 검사기는 전체 ID·최종 라벨·회귀 정답을 대조하고, 두 차량의 11개 위치를 기존 `X_sequence` 및 두 해상도의 차량 마스크와 비교한다. ZIP 옆에 양성·음성 비교 GIF를 저장한다. 왼쪽은 1m, 오른쪽은 0.2m 격자다.
 
 로컬 모델은 ZIP의 `manifest.json`에서 표본의 `member`를 찾아 그 NPZ를 읽고, `src.bev_sequence.read_frames(arrays, "20cm")`로 (11, 5, 240, 480) 입력을 복원한다. 다섯 채널은 차로 중심선, 차선·도로 경계, 기준 차량, 상대 차량, 주변 차량 순이다. 기준 차량 차체는 두 해상도 모두 4.7 × 2.0m로 통일했다. 모든 시점은 현재 기준 차량의 좌표계를 사용한다. 분류 정답은 `label`, 진입 시간 정답은 `time_target_s`이며 값이 없는 사례는 회귀 손실에서 제외한다.
+
+### Part D · BEV 학습과 기록
+
+`scripts/bev/`는 64개 BEV ZIP으로 CNN을 학습하고 그 과정을 기록하는 도구다. 모든 명령은 저장소 루트에서 실행한다. 실행 결과는 Git에서 제외되는 `data/training_runs/<실험 이름>/`에 쌓이고, 보고서에 쓸 실험만 `publish.py`로 `results/bev/`에 옮겨 커밋한다.
+
+| 파일 | 하는 일 |
+|---|---|
+| `check_data.py` | 64개 ZIP의 표본 ID·분할·주행 구간·라벨·진입 시간을 `data/dataset/`과 대조한다. `--crc`는 ZIP 손상까지 검사한다 |
+| `bench_loader.py` | DataLoader worker 수별 로딩 속도와 epoch당 로딩 시간을 잰다 |
+| `lr_find.py` | 학습률을 지수적으로 올리며 손실을 기록하는 학습률 범위 시험. 추천값은 탐색 상한으로 쓴다 |
+| `search.py` | fold 1의 학습 구간 안에서 학습률·너비·dropout·weight decay·batch를 무작위 탐색한다. fold 1의 평가 구간은 쓰지 않는다 |
+| `train.py` | Train 주행 구간 5-fold 학습. 학습 구간을 다시 나눈 내부 검증 AP로 early stopping과 학습률 감소를 정하고, 최고 가중치를 복원해 평가 구간에 한 번 적용한다 |
+| `report.py` | fold별 학습 곡선(`learning.png`)과 PR 곡선·혼동행렬·진입까지 남은 시간별 Recall(`evaluation.png`) |
+| `elbow.py` | 기본 숫자 8개로 주행 상황을 K-Means로 묶고 inertia·silhouette로 군집 수를 비교한다 |
+| `publish.py` | 끝난 실험의 설정·학습 이력·지표·그림을 `results/bev/<이름>/`으로 복사한다 |
+
+모델은 3×3 합성곱(stride 2)·BatchNorm·ReLU 블록 3개, 3×6 공간 격자 평균, 64-unit 은닉층으로 구성되고 He 초기화를 쓴다. 11프레임 입력은 지도 2채널을 한 번, 차량 3채널(기준·상대·주변)을 프레임마다 쌓아 35채널이다. 20cm 입력은 먼저 5×5 stride-5 합성곱으로 1m 격자 크기에 맞춘 뒤 같은 블록을 지나므로 두 해상도의 수용영역이 같다. 학습은 양성 전부와 그 4배의 음성을 epoch마다 새로 뽑아 진행하고, 평가 점수에는 이 재추출로 생긴 확률 편향을 되돌리는 보정을 적용한다.
+
+```sh
+pip install -r scripts/bev/requirements.txt          # PyTorch CUDA 빌드는 pytorch.org 안내 명령으로 설치
+python scripts/bev/check_data.py --crc --out data/training_runs/audit.json
+python scripts/bev/lr_find.py --resolution 1m --frames 11 --device cuda --out data/training_runs/lr-1m-11f
+python scripts/bev/search.py --resolution 1m --frames 11 --device cuda --lr-min 5e-4 --lr-max 6e-3 --out data/training_runs/search-1m-11f
+python scripts/bev/train.py --resolution 1m --frames 11 --device cuda --fold 0 --lr 5.6e-3 --width 32 --weight-decay 1e-4 --batch 32 --out data/training_runs/cv-1m-11f
+python scripts/bev/report.py data/training_runs/cv-1m-11f
+python scripts/bev/publish.py data/training_runs/cv-1m-11f
+```
+
+`train.py`의 기본값은 epoch 상한 100, 내부 검증 AP가 0.001을 넘게 오르지 않은 epoch가 4번째면 학습률 절반, 8번째면 중단, 양성:음성 1:4, seed 1729다. 전체 옵션은 `--help`로 본다. `run.json`에는 설정, 입력 채널·파라미터 수, Git 커밋, `train.py`의 SHA-256, 라이브러리 버전과 GPU가 남는다. `results/bev/`에는 표본별 점수(`predictions.csv`), 구간 목록(`groups.csv`), 가중치(`best.pt`)를 올리지 않는다.

@@ -151,8 +151,11 @@ def network(in_channels, resolution, width, dropout, batchnorm, act="relu"):
     for out_channels in (width, 2 * width, 4 * width):
         layers += conv_block(in_channels, out_channels, 3, 2, 1, batchnorm, act)
         in_channels = out_channels
-    model = nn.Sequential(*layers, nn.AdaptiveAvgPool2d((3, 6)), nn.Flatten(),
-                          nn.Linear(in_channels * 18, 64), activation(act), nn.Dropout(dropout), nn.Linear(64, 1))
+    head = [nn.Linear(in_channels * 18, 64, bias=not batchnorm)]
+    if batchnorm:
+        head.append(nn.BatchNorm1d(64))
+    head.extend([activation(act), nn.Dropout(dropout), nn.Linear(64, 1)])
+    model = nn.Sequential(*layers, nn.AdaptiveAvgPool2d((3, 6)), nn.Flatten(), *head)
     for module in model.modules():
         if isinstance(module, (nn.Conv2d, nn.Linear)):
             # He initialization, Lec11 pp.9-11
@@ -229,6 +232,8 @@ def run_fold(args, data, loader, fold, fit, monitor, outer, device):
         for epoch in range(1, args.epochs + 1):
             start = time.monotonic()
             sampled = rng.permutation(np.r_[pos, rng.choice(neg, n_negatives, replace=False)])
+            if not args.no_batchnorm and len(sampled) > 1 and len(sampled) % args.batch == 1:
+                sampled = sampled[:-1]
             loader.sampler.indices = sampled.tolist()
             model.train()
             total = 0.
@@ -329,6 +334,8 @@ def main():
     if (min(args.epochs, args.batch, args.neg_ratio, args.width) < 1 or args.lr <= 0 or not 0 <= args.dropout < 1
             or min(args.min_delta, args.patience, args.lr_patience, args.workers, args.clip, args.weight_decay) < 0):
         p.error("Invalid training parameters")
+    if not args.no_batchnorm and args.batch < 2:
+        p.error("BatchNorm requires --batch >= 2")
     if args.tune and args.fold == 0:
         p.error("--tune needs a single --fold")
     data = Sequences(args.data, args.shards, args.resolution, args.frames, args.channels, args.mirror)

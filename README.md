@@ -180,7 +180,7 @@ uv run --python 3.12 scripts/check_bev_sequence.py data/bev_sequences/train_0000
 | `elbow.py` | 기본 숫자 8개로 주행 상황을 K-Means로 묶고 inertia·silhouette로 군집 수를 비교한다 |
 | `publish.py` | 끝난 실험의 설정·학습 이력·지표·그림을 `results/bev/<이름>/`으로 복사한다 |
 
-모델은 3×3 합성곱(stride 2)·BatchNorm·ReLU 블록 3개, 3×6 공간 격자 평균, 64-unit 은닉층으로 구성되고 He 초기화를 쓴다. 11프레임 입력은 지도 2채널을 한 번, 차량 3채널(기준·상대·주변)을 프레임마다 쌓아 35채널이다. 20cm 입력은 먼저 5×5 stride-5 합성곱으로 1m 격자 크기에 맞춘 뒤 같은 블록을 지나므로 두 해상도의 수용영역이 같다. 학습은 양성 전부와 그 4배의 음성을 epoch마다 새로 뽑아 진행하고, 평가 점수에는 이 재추출로 생긴 확률 편향을 되돌리는 보정을 적용한다.
+모델은 3×3 합성곱(stride 2)·BatchNorm·ReLU 블록 3개, 3×6 공간 격자 평균, 64-unit 완전연결·BatchNorm·ReLU 은닉층으로 구성되고 He 초기화를 쓴다. 11프레임 입력은 지도 2채널을 한 번, 차량 3채널(기준·상대·주변)을 프레임마다 쌓아 35채널이다. 20cm 입력은 먼저 5×5 stride-5 합성곱으로 1m 격자 크기에 맞춘 뒤 같은 블록을 지나므로 두 해상도의 수용영역이 같다. 학습은 양성 전부와 그 4배의 음성을 epoch마다 새로 뽑아 진행하고, 평가 점수에는 이 재추출로 생긴 확률 편향을 되돌리는 보정을 적용한다.
 
 라이브러리는 팀 스크립트와 같은 Python 3.12·numpy 2.5.5·scikit-learn 1.9.1·matplotlib 3.10.9에 torch 2.9.1을 더해 `scripts/bev/requirements.txt`에 고정했다. scikit-learn 버전이 같아야 BEV의 5개 평가 fold가 `train_baseline.py`의 fold와 표본 단위까지 같아져 트리 모델과 fold별로 짝지어 비교할 수 있다. macOS(MPS)와 CPU에서는 다른 팀 스크립트처럼 uv로 실행한다.
 
